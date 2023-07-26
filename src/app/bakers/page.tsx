@@ -103,11 +103,11 @@
 import { useState, useEffect } from "react";
 import BakerCard from "../bakerscard/page";
 
-interface BakerProps {
-  bakerDetails: (place_id: string) => void;
-}
+// interface BakerProps {
+//   bakerDetails: (place_id: string) => void;
+// }
 
-const Bakers: React.FC<BakerProps> = ({ bakerDetails }) => {
+function Bakers() {
   const [bakers, setBakers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -171,7 +171,7 @@ const Bakers: React.FC<BakerProps> = ({ bakerDetails }) => {
 
   useEffect(() => {
     fetchBakerData();
-  }, [latitude, longitude]);
+  }, []);
 
   useEffect(() => {
     const filteredBakers = bakers.filter((baker) => {
