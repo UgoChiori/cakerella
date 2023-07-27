@@ -1,19 +1,19 @@
-
 // "use client";
-// import { useState, useEffect, use } from "react";
+// import { useState, useEffect } from "react";
 // import BakerCard from "../bakerscard/page";
 
-// interface BakerProps {
-//   bakerDetails: (place_id: string) => void;
-// }
+// // interface BakerProps {
+// //   bakerDetails: (place_id: string) => void;
+// // }
 
-// const Bakers: React.FC<BakerProps> = ({ bakerDetails }) => {
+// function Bakers() {
 //   const [bakers, setBakers] = useState<any[]>([]);
 //   const [loading, setLoading] = useState<boolean>(true);
 //   const [searchQuery, setSearchQuery] = useState<string>("");
 //   const [filteredBakers, setFilteredBakers] = useState<any[]>([]);
 //   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
-  
+//   const [latitude, setLatitude] = useState<number | null>(null);
+//   const [longitude, setLongitude] = useState<number | null>(null);
 
 //   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 //     setSearchQuery(e.target.value);
@@ -22,7 +22,10 @@
 //   const fetchBakerData = async (pageToken: string | null = null) => {
 //     setLoading(true);
 //     try {
-//       let url = `https://bakeryserver.vercel.app/api/maps/place?latitude=6.468137&longitude=3.638487&radius=100000`;
+//       let url = `https://bakeryserver.vercel.app/api/maps/place?radius=100000`;
+//       if (latitude && longitude) {
+//         url = `${url}&latitude=${latitude}&longitude=${longitude}`;
+//       }
 //       if (pageToken) {
 //         url = `${url}&pagetoken=${pageToken}`;
 //       }
@@ -46,6 +49,26 @@
 //   };
 
 //   useEffect(() => {
+//     const getLocation = () => {
+//       if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(
+//           (position) => {
+//             setLatitude(position.coords.latitude);
+//             setLongitude(position.coords.longitude);
+//           },
+//           (error) => {
+//             console.log(error);
+//           }
+//         );
+//       } else {
+//         alert("Geolocation is not available");
+//       }
+//     };
+
+//     getLocation();
+//   }, []);
+
+//   useEffect(() => {
 //     fetchBakerData();
 //   }, []);
 
@@ -56,12 +79,12 @@
 //     setFilteredBakers(filteredBakers);
 //   }, [searchQuery, bakers]);
 
- 
-
 //   return (
 //     <main className="flex flex-col items-center justify-between min-h-screen p-8 bg-[white]">
 //       <h1 className="text-4xl font-bold text-gray-800 mb-4">Cakerella</h1>
-//       <h2 className="text-2xl font-bold text-gray-800 mb-4">Bake the world a better place</h2>
+//       <h2 className="text-2xl font-bold text-gray-800 mb-4">
+//         Bake the world a better place
+//       </h2>
 //       <h3 className="text-xl font-bold text-gray-800 mb-4">Bakers</h3>
 //       <input
 //         type="text"
@@ -80,7 +103,7 @@
 //             user_ratings_total={baker.user_ratings_total}
 //             formatted_address={baker.formatted_address}
 //             opening_hours={baker.opening_hours}
-//             photo_reference={[]} 
+//             photo_reference={[]}
 //           />
 //         ))}
 //       </div>
@@ -96,16 +119,11 @@
 //   );
 // };
 
-
 // export default Bakers;
 
-"use client";
+'use client'
 import { useState, useEffect } from "react";
 import BakerCard from "../bakerscard/page";
-
-// interface BakerProps {
-//   bakerDetails: (place_id: string) => void;
-// }
 
 function Bakers() {
   const [bakers, setBakers] = useState<any[]>([]);
@@ -113,8 +131,10 @@ function Bakers() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBakers, setFilteredBakers] = useState<any[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
+  const [userLocation, setUserLocation] = useState<{ latitude: number | null; longitude: number | null }>({
+    latitude: null,
+    longitude: null,
+  });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -123,9 +143,9 @@ function Bakers() {
   const fetchBakerData = async (pageToken: string | null = null) => {
     setLoading(true);
     try {
-      let url = `https://bakeryserver.vercel.app/api/maps/place?radius=100000`;
-      if (latitude && longitude) {
-        url = `${url}&latitude=${latitude}&longitude=${longitude}`;
+      let url = `https://bakeryserver.vercel.app/api/maps/place?latitude=3.468137&longitude=3.638487&radius=100000`;
+      if (userLocation.latitude && userLocation.longitude) {
+        url = `${url}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`;
       }
       if (pageToken) {
         url = `${url}&pagetoken=${pageToken}`;
@@ -154,8 +174,10 @@ function Bakers() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
+            setUserLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
           },
           (error) => {
             console.log(error);
@@ -171,7 +193,7 @@ function Bakers() {
 
   useEffect(() => {
     fetchBakerData();
-  }, []);
+  }, [userLocation]);
 
   useEffect(() => {
     const filteredBakers = bakers.filter((baker) => {
@@ -183,9 +205,7 @@ function Bakers() {
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-8 bg-[white]">
       <h1 className="text-4xl font-bold text-gray-800 mb-4">Cakerella</h1>
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        Bake the world a better place
-      </h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Bake the world a better place</h2>
       <h3 className="text-xl font-bold text-gray-800 mb-4">Bakers</h3>
       <input
         type="text"
@@ -218,6 +238,6 @@ function Bakers() {
       )}
     </main>
   );
-};
+}
 
 export default Bakers;
