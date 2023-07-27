@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react";
-import BakersCard from "../../components/BakersCard";
+import BakersCard from "../components/BakersCard";
 
 
 
