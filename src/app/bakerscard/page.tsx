@@ -61,7 +61,7 @@ export type BakersCardProps = {
     open_now?: boolean;
     // Add any other properties related to opening_hours if necessary
   };
-  photo_reference: string[];
+  // photo_reference: string[];
   user_ratings_total: number;
 };
 
@@ -71,7 +71,7 @@ const BakersCard: React.FC<BakersCardProps> = ({
   rating,
   formatted_address,
   opening_hours,
-  photo_reference,
+  // photo_reference,
   user_ratings_total,
 }) => {
   const isCurrentlyOpen = opening_hours?.open_now ?? false;
@@ -87,7 +87,7 @@ const BakersCard: React.FC<BakersCardProps> = ({
       ) : (
         <p className="text-sm">Opening hours not available</p>
       )}
-      <p className="text-sm">{photo_reference}</p>
+      {/* <p className="text-sm">{photo_reference}</p> */}
       <p className="text-sm">Total Ratings: {user_ratings_total}</p>
 
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
