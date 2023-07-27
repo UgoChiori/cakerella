@@ -123,7 +123,7 @@
 
 'use client'
 import { useState, useEffect } from "react";
-import BakerCard from "../bakerscard/page";
+import BakersCard from "../bakerscard/page";
 
 function Bakers() {
   const [bakers, setBakers] = useState<any[]>([]);
@@ -216,7 +216,7 @@ function Bakers() {
       />
       <div className="grid gap-4 md:grid-cols-3">
         {filteredBakers.map((baker) => (
-          <BakerCard
+          <BakersCard
             key={baker.place_id}
             name={baker.name}
             business_status={baker.status}
@@ -224,7 +224,7 @@ function Bakers() {
             user_ratings_total={baker.user_ratings_total}
             formatted_address={baker.formatted_address}
             opening_hours={baker.opening_hours}
-            photo_reference={[]}
+            // photo_reference={[]}
           />
         ))}
       </div>
