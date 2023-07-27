@@ -1,8 +1,6 @@
 'use client'
 import { useState, useEffect } from "react";
-import BakersCard from "../bakerscard/page";
-
-
+import BakersCard from "../../components/BakersCard";
 
 
 
